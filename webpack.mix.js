@@ -1,4 +1,3 @@
-const { vue } = require('laravel-mix');
 const mix = require('laravel-mix');
 
 /*
@@ -11,14 +10,16 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-// let path = require('path');
-// mix.alias({
-//     vue$: path.join(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js')
-// });
-// mix.webpackConfig(webpack => { return {
-//     plugins: [new webpack.DefinePlugin({ '__VUE_OPTIONS_API__': 'true', '__VUE_PROD_DEVTOOLS__': 'false' })],
-// }});
 
 mix.js('resources/js/app.js', 'public/js')
-    vue();
-mix.browserSync('lara8vue3.test');
+    .vue()
+    .postCss('resources/css/app.css', 'public/css', [
+        require('postcss-import'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+    ])
+    .webpackConfig(require('./webpack.config'));
+
+if (mix.inProduction()) {
+    mix.version();
+}
